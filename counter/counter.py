@@ -116,7 +116,7 @@ class Bank:
         except KeyError:
             raise NoAccount()
         
-class CounterCommands:
+class Counter:
     """My custom cog that does stuff"""
     def __init__(self, bot):
         self.bot = bot

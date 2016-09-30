@@ -165,6 +165,7 @@ class Report:
     @report.command(pass_context=True, no_pm=True, name="list")
     @checks.admin_or_permissions(administrator=True)
     async def report_list(self, ctx):
+        "Lists all users in negative standing"
         message = ""
         try:
             self.reports[ctx.message.server.id]

@@ -241,4 +241,4 @@ def setup(bot):
     global logger
     check_folders()
     check_files()
-    bot.add_cog(CounterCommands(bot))
+    bot.add_cog(Counter(bot))

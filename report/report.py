@@ -34,13 +34,14 @@ class Report:
                        "created_at" : timestamp
                       }
 
-            if self.reports[ctx.message.server.id][user.id]:
+            if user.id in self.reports[ctx.message.server.id]:
                 reportid = len(self.reports[ctx.message.server.id][user.id])
             else:
                 reportid = 0
                 
-            self.reports[ctx.message.server.id][user.id][reportid] = report
+            self.reports[ctx.message.server.id][user.id][str(reportid)] = report
             dataIO.save_json("data/counter/reports.json", self.reports)
+            self.reports = dataIO.load_json("data/counter/reports.json")
             await self.bot.say("Report lodged")
 
             total = 0
@@ -53,7 +54,8 @@ class Report:
 
     @commands.command(pass_context=True) #!showreports @Aethex#0394 
     @checks.admin_or_permissions(administrator=True)
-    async def showreports(self, ctx, user : discord.Member):
+    async def allreports(self, ctx, user : discord.Member):
+        "Show all the reports that have been lodged against a user"
         all_reports = "{0} has been reported for\n".format(user.name)
         total = 0
         
@@ -63,18 +65,68 @@ class Report:
             if ctx.message.server.id not in self.reports:
                 self.reports[ctx.message.server.id] = {}
                 
-        if self.reports[ctx.message.server.id][user.id]:
-            for v in self.reports[ctx.message.server.id][user.id]:
-                all_reports += """{0} (Username at time) : reported for "{1}" worth {2} on {3} by {4}\n""".format(self.reports[ctx.message.server.id][user.id][v]["name"], self.reports[ctx.message.server.id][user.id][v]["reason"], self.reports[ctx.message.server.id][user.id][v]["points"], self.reports[ctx.message.server.id][user.id][v]["created_at"], self.reports[ctx.message.server.id][user.id][v]["created_by"])
+        if user.id in self.reports[ctx.message.server.id]:
+            report_num = len(self.reports[ctx.message.server.id][user.id]) - 1
+            for id in range(report_num):
+                v = str(id)
+                all_reports += """{0}-{1} (Active={6}): reported for "{2}" worth {3} on {4} by {5}\n""".format(v, self.reports[ctx.message.server.id][user.id][v]["name"], self.reports[ctx.message.server.id][user.id][v]["reason"], self.reports[ctx.message.server.id][user.id][v]["points"], self.reports[ctx.message.server.id][user.id][v]["created_at"], self.reports[ctx.message.server.id][user.id][v]["created_by"],self.reports[ctx.message.server.id][user.id][v]["active"])
                 if self.reports[ctx.message.server.id][user.id][v]["active"]:
                     total += self.reports[ctx.message.server.id][user.id][v]["points"]
-                if (len(all_reports) - all_reports.count(' ')) > 1500:
+                if int(len(all_reports) - all_reports.count(' ')) > 1500:
                     await self.bot.say("```"+all_reports+"```")
                     all_reports = ""
-                
+            '''
+            for v in self.reports[ctx.message.server.id][user.id]:
+                all_reports += """{0}-{1} (Active={6}): reported for "{2}" worth {3} on {4} by {5}\n""".format(v, self.reports[ctx.message.server.id][user.id][v]["name"], self.reports[ctx.message.server.id][user.id][v]["reason"], self.reports[ctx.message.server.id][user.id][v]["points"], self.reports[ctx.message.server.id][user.id][v]["created_at"], self.reports[ctx.message.server.id][user.id][v]["created_by"],self.reports[ctx.message.server.id][user.id][v]["active"])
+                if self.reports[ctx.message.server.id][user.id][v]["active"]:
+                    total += self.reports[ctx.message.server.id][user.id][v]["points"]
+                if int(len(all_reports) - all_reports.count(' ')) > 1500:
+                    await self.bot.say("```"+all_reports+"```")
+                    all_reports = ""
+            '''
             await self.bot.say("```"+all_reports+"\nTotal user score: "+str(total)+"/100"+"```")
         else:
             await self.bot.say("This user has no reports against them")
+
+    @commands.command(pass_context=True) #!showreports @Aethex#0394 
+    @checks.admin_or_permissions(administrator=True)
+    async def dereport(self, ctx, user : discord.Member, reportid : int):
+        "Deactivate a report"
+        try:
+            self.reports[ctx.message.server.id][user.id]
+        except KeyError:
+            if ctx.message.server.id not in self.reports:
+                self.reports[ctx.message.server.id] = {}
+
+        if user.id in self.reports[ctx.message.server.id]:
+            reports = len(self.reports[ctx.message.server.id][user.id])
+            if reportid < reports:
+                if self.reports[ctx.message.server.id][user.id][str(reportid)]["active"] == True:
+                    self.reports[ctx.message.server.id][user.id][str(reportid)]["active"] = False
+                    dataIO.save_json("data/counter/reports.json", self.reports)
+                    await self.bot.say("Report deactivated")
+                else:
+                    await self.bot.say("That report is already disactivated")
+
+    @commands.command(pass_context=True) #!showreports @Aethex#0394 
+    @checks.admin_or_permissions(administrator=True)
+    async def rereport(self, ctx, user : discord.Member, reportid : int):
+        "Reactivate a report a deactivated report"
+        try:
+            self.reports[ctx.message.server.id][user.id]
+        except KeyError:
+            if ctx.message.server.id not in self.reports:
+                self.reports[ctx.message.server.id] = {}
+
+        if user.id in self.reports[ctx.message.server.id]:
+            reports = len(self.reports[ctx.message.server.id][user.id])
+            if reportid < reports:
+                if self.reports[ctx.message.server.id][user.id][str(reportid)]["active"] == False:
+                    self.reports[ctx.message.server.id][user.id][str(reportid)]["active"] = True
+                    dataIO.save_json("data/counter/reports.json", self.reports)
+                    await self.bot.say("Report deactivated")
+                else:
+                    await self.bot.say("That report is already active")
             
     
 def check_folders():

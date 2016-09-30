@@ -15,7 +15,7 @@ class Report:
 
     @commands.group(pass_context=True)
     async def report(self, ctx):
-        """Report commands"""
+        """Lodge moderator reports on users"""
         if ctx.invoked_subcommand is None:
             await send_cmd_help(ctx)
             return
@@ -85,7 +85,7 @@ class Report:
     @report.command(pass_context=True, no_pm=True, name="activate")
     @checks.admin_or_permissions(administrator=True)
     async def report_activate(self, ctx, user : discord.Member, reportid : int):
-        "Reactivate a report a deactivated report"
+        "Reactivate a deactivated report"
         try:
             self.reports[ctx.message.server.id][user.id]
         except KeyError:
@@ -104,8 +104,7 @@ class Report:
                     await self.bot.say("That report is already active")
             else:
                 await self.bot.say("There are no reports that match that id")
-            
-#```````````````````
+
     @report.command(pass_context=True, no_pm=True, name="all")
     @checks.admin_or_permissions(administrator=True)
     async def reports_all(self, ctx, user : discord.Member=None):
@@ -196,7 +195,6 @@ def check_folders():
         os.makedirs("data/counter")
 
 def check_files():
-
     f = "data/counter/reports.json"
     if not fileIO(f, "check"):
         print("Creating default reports.json...")

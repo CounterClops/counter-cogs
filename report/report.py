@@ -52,7 +52,7 @@ class Report:
         else:
             await self.bot.say("You cannot give more than 50 points for a single offence\nReport has been stopped")
 
-    @commands.command(pass_context=True) #!showreports @Aethex#0394 
+    @commands.command(pass_context=True)
     @checks.admin_or_permissions(administrator=True)
     async def allreports(self, ctx, user : discord.Member):
         "Show all the reports that have been lodged against a user"
@@ -66,7 +66,7 @@ class Report:
                 self.reports[ctx.message.server.id] = {}
                 
         if user.id in self.reports[ctx.message.server.id]:
-            report_num = len(self.reports[ctx.message.server.id][user.id]) - 1
+            report_num = len(self.reports[ctx.message.server.id][user.id])
             for id in range(report_num):
                 v = str(id)
                 all_reports += """{0}-{1} (Active={6}): reported for "{2}" worth {3} on {4} by {5}\n""".format(v, self.reports[ctx.message.server.id][user.id][v]["name"], self.reports[ctx.message.server.id][user.id][v]["reason"], self.reports[ctx.message.server.id][user.id][v]["points"], self.reports[ctx.message.server.id][user.id][v]["created_at"], self.reports[ctx.message.server.id][user.id][v]["created_by"],self.reports[ctx.message.server.id][user.id][v]["active"])
@@ -88,7 +88,7 @@ class Report:
         else:
             await self.bot.say("This user has no reports against them")
 
-    @commands.command(pass_context=True) #!showreports @Aethex#0394 
+    @commands.command(pass_context=True)
     @checks.admin_or_permissions(administrator=True)
     async def dereport(self, ctx, user : discord.Member, reportid : int):
         "Deactivate a report"
@@ -108,7 +108,7 @@ class Report:
                 else:
                     await self.bot.say("That report is already disactivated")
 
-    @commands.command(pass_context=True) #!showreports @Aethex#0394 
+    @commands.command(pass_context=True)
     @checks.admin_or_permissions(administrator=True)
     async def rereport(self, ctx, user : discord.Member, reportid : int):
         "Reactivate a report a deactivated report"
@@ -128,6 +128,33 @@ class Report:
                 else:
                     await self.bot.say("That report is already active")
             
+
+    @commands.command(pass_context=True)
+    @checks.admin_or_permissions(administrator=True)
+    async def badusers(self, ctx):
+        message = None
+        try:
+            self.reports[ctx.message.server.id]
+            message = "```These users have active logs against them\n"
+        except KeyError:
+            if ctx.message.server.id not in self.reports:
+                self.reports[ctx.message.server.id] = {}
+                await self.bot.say("No user's have been reported")
+                return
+
+        for user in self.reports[ctx.message.server.id]:
+            user_total = 0
+            for report in self.reports[ctx.message.server.id][user]:
+                if self.reports[ctx.message.server.id][user][report]["active"] == True:
+                    user_total += self.reports[ctx.message.server.id][user][report]["points"]
+            if user_total > 0:
+                user_name = discord.utils.get(ctx.message.server.members, id=user).name
+                message += "{0} has {1}/100\n".format(user_name, user_total)
+
+        if message != None:
+            message += "```"
+            await self.bot.say(message)
+                
     
 def check_folders():
     if not os.path.exists("data/counter"):
@@ -146,4 +173,3 @@ def setup(bot):
     check_folders()
     check_files()
     bot.add_cog(Report(bot))
-    

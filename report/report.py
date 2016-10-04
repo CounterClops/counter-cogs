@@ -180,7 +180,10 @@ class Report:
                 if self.reports[ctx.message.server.id][user][report]["active"] == True:
                     user_total += self.reports[ctx.message.server.id][user][report]["points"]
             if user_total > 0:
-                user_name = discord.utils.get(ctx.message.server.members, id=user).name
+                try:
+                    user_name = discord.utils.get(ctx.message.server.members, id=user).name
+                except AttributeError:
+                    user_name = self.reports[ctx.message.server.id][user][str(len(self.reports[ctx.message.server.id][user])-1)]["name"]
                 message += "{0} has {1}/100\n".format(user_name, user_total)
 
         if message != "":

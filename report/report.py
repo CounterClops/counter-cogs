@@ -24,7 +24,7 @@ class Report:
     @checks.admin_or_permissions(administrator=True)
     async def report_add(self, ctx, user : discord.Member, points : int, *reason : str):
         """Lodge a user report"""
-        if points <= 50:
+        if points <= 100:
             try:
                 self.reports[ctx.message.server.id][user.id]
             except KeyError:
@@ -57,7 +57,7 @@ class Report:
                     total += self.reports[ctx.message.server.id][user.id][v]["points"]
             await self.bot.say("{0} has {1}/100".format(user.name, str(total)))
         else:
-            await self.bot.say("You cannot give more than 50 points for a single offence\nReport has been stopped")
+            await self.bot.say("You can only give a max of 100.")
 
     @report.command(pass_context=True, no_pm=True, name="deactivate")
     @checks.admin_or_permissions(administrator=True)

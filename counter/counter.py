@@ -116,10 +116,17 @@ class Counter:
                     self.bank._save_bank()
             
         await self.bot.say("Updated all registered bank names!\n```It's recommended you reload modules tha rely on accounts```")
-        
-    @commands.command(pass_context=True, no_pm=True)
+
+    @commands.group(pass_context=True)
+    async def top(self, ctx):
+        """Lodge moderator reports on users"""
+        if ctx.invoked_subcommand is None:
+            await send_cmd_help(ctx)
+            return
+
+    @top.command(pass_context=True, no_pm=True, name="update")
     @checks.admin_or_permissions(administrator=True)
-    async def updatetop(self, ctx):
+    async def top_update(self, ctx):
         "Get the highest posters"
         ranks = {}
         ranks[ctx.message.server.id] = {}
@@ -150,18 +157,12 @@ class Counter:
                                 ranks[ctx.message.server.id][message.author.id]["posts"] = 1
                                 ranks[ctx.message.server.id][message.author.id]["username"] = message.author.name
                     last = message
-        print(ranks)
         dataIO.save_json("data/counter/ranks.json", ranks)
         await self.bot.say("All messages counted")
 
-    @commands.command(pass_context=True, no_pm=True)
-    async def displaytop(self, ctx):
+    @top.command(pass_context=True, no_pm=True, name="display")
+    async def top_display(self, ctx):
         ranks = dataIO.load_json("data/counter/ranks.json")
-        """
-        users = []
-        for user in ranks[ctx.message.server.id]:
-            users.append(user)
-        """
    
         sorted_users = sorted(ranks[ctx.message.server.id], key=lambda x: ranks[ctx.message.server.id][x]["posts"], reverse=True)
         

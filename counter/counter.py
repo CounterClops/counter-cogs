@@ -130,6 +130,7 @@ class Counter:
         "Get the highest posters"
         ranks = {}
         ranks[ctx.message.server.id] = {}
+        await self.bot.say("Running post leaderboard update.")
         for channel in ctx.message.server.channels:
             number = 0
             async for message in self.bot.logs_from(channel, limit=100):

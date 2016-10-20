@@ -48,7 +48,7 @@ class Counter:
         """You've seen ping, now get ready for pong!"""
         await self.bot.say("`Ping!`")
 
-    @commands.command(pass_context=True, no_pm=True)    
+    @commands.command(pass_context=True, no_pm=True)
     async def ship(self, ctx, user_1 : discord.Member=None, user_2 : discord.Member=None):
         "Ship yourself, someone else, or two random people"
 
@@ -83,7 +83,7 @@ class Counter:
                 extra = "\n\n`You know, there's pathetic, and then there's you.`"
         await self.bot.say(user_1.mention + msg + user_2.mention + extra)
 
-    @commands.command(pass_context=True, no_pm=True)    
+    @commands.command(pass_context=True, no_pm=True)
     async def playing(self, ctx, game=None):
         "Finds users playing a particular game"
         
@@ -164,8 +164,6 @@ class Counter:
         """
    
         sorted_users = sorted(ranks[ctx.message.server.id], key=lambda x: ranks[ctx.message.server.id][x]["posts"], reverse=True)
-        
-                #bank_sorted = sorted(self.bank.get_server_accounts(server), key=lambda x: x.balance, reverse=True)
         
         top = 5
         if len(sorted_users) < top:

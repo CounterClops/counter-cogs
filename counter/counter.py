@@ -17,6 +17,7 @@ class Counter:
     def __init__(self, bot):
         self.bot = bot
         self.bank = Bank(bot, "data/economy/bank.json")
+        
 
     @commands.command(pass_context=True, no_pm=True)
     async def boop(self, ctx, user : discord.Member=None):
@@ -118,15 +119,83 @@ class Counter:
         
     @commands.command(pass_context=True, no_pm=True)
     @checks.admin_or_permissions(administrator=True)
-    async def rank(self, ctx):
-        "Boop"
-        pass
+    async def updatetop(self, ctx):
+        "Get the highest posters"
+        ranks = {}
+        ranks[ctx.message.server.id] = {}
+        for channel in ctx.message.server.channels:
+            number = 0
+            async for message in self.bot.logs_from(channel, limit=100):
+                number = number + 1
+                if self.bot.user not in message.mentions and message.author.bot != True:
+                    if len(message.content.split(" ")) >= 4 and len(message.content) >= 8 and not message.content.startswith("!"):
+                        try:
+                            ranks[ctx.message.server.id][message.author.id]["posts"] += 1
+                        except KeyError:
+                            ranks[ctx.message.server.id][message.author.id] = {}
+                            ranks[ctx.message.server.id][message.author.id]["posts"] = 1
+                            ranks[ctx.message.server.id][message.author.id]["username"] = message.author.name
+                last = message
+                
+            while number == 100:
+                number = 0
+                async for message in self.bot.logs_from(channel, limit=100, before=last):
+                    number = number + 1
+                    if self.bot.user not in message.mentions and message.author.bot != True:
+                        if len(message.content.split(" ")) >= 4 and len(message.content) >= 8 and not message.content.startswith("!"):
+                            try:
+                                ranks[ctx.message.server.id][message.author.id]["posts"] += 1
+                            except KeyError:
+                                ranks[ctx.message.server.id][message.author.id] = {}
+                                ranks[ctx.message.server.id][message.author.id]["posts"] = 1
+                                ranks[ctx.message.server.id][message.author.id]["username"] = message.author.name
+                    last = message
+        print(ranks)
+        dataIO.save_json("data/counter/ranks.json", ranks)
+        await self.bot.say("All messages counted")
+
+    @commands.command(pass_context=True, no_pm=True)
+    async def displaytop(self, ctx):
+        ranks = dataIO.load_json("data/counter/ranks.json")
+        """
+        users = []
+        for user in ranks[ctx.message.server.id]:
+            users.append(user)
+        """
+   
+        sorted_users = sorted(ranks[ctx.message.server.id], key=lambda x: ranks[ctx.message.server.id][x]["posts"], reverse=True)
+        
+                #bank_sorted = sorted(self.bank.get_server_accounts(server), key=lambda x: x.balance, reverse=True)
+        
+        top = 5
+        if len(sorted_users) < top:
+            top = len(sorted_users)
+        topfive = sorted_users[:top]
+        highscore = "Top Posters:\n"
+        place = 1
+        for user in topfive:
+            highscore += str(place).ljust(len(str(top))+1)
+            highscore += (ranks[ctx.message.server.id][user]["username"]+" ").ljust(23-len(str(ranks[ctx.message.server.id][user]["posts"])))
+            highscore += str(ranks[ctx.message.server.id][user]["posts"]) + "\n"
+            place += 1
+            
+        if highscore:
+            if len(highscore) < 1985:
+                await self.bot.say("```py\n"+highscore+"```")
+            else:
+                await self.bot.say("The leaderboard is too big to be displayed.")
+        else:
+            await self.bot.say("The server messages have not been counted yet")
     
 def check_folders():
     if not os.path.exists("data/economy"):
         print("Creating data/economy folder...")
         os.makedirs("data/economy")
 
+    if not os.path.exists("data/counter"):
+        print("Creating data/counter folder...")
+        os.makedirs("data/counter")
+        
 def check_files():
 
     f = "data/economy/settings.json"
@@ -137,6 +206,11 @@ def check_files():
     f = "data/economy/bank.json"
     if not fileIO(f, "check"):
         print("Creating empty bank.json...")
+        fileIO(f, "save", {})
+        
+    f = "data/counter/ranks.json"
+    if not fileIO(f, "check"):
+        print("Creating empty ranks.json...")
         fileIO(f, "save", {})
         
 def setup(bot):

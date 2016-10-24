@@ -128,7 +128,7 @@ class Counter:
     @checks.admin_or_permissions(administrator=True)
     async def top_update(self, ctx):
         "Get the highest posters"
-        ranks = {}
+        ranks = dataIO.load_json("data/counter/ranks.json")
         ranks[ctx.message.server.id] = {}
         await self.bot.say("Running post leaderboard update.")
         for channel in ctx.message.server.channels:
@@ -168,7 +168,7 @@ class Counter:
    
         sorted_users = sorted(ranks[ctx.message.server.id], key=lambda x: ranks[ctx.message.server.id][x]["posts"], reverse=True)
         
-        top = 5
+        top = 10
         if len(sorted_users) < top:
             top = len(sorted_users)
         topfive = sorted_users[:top]

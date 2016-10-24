@@ -186,13 +186,13 @@ class Counter:
                 else:
                     await self.bot.say("The leaderboard is too big to be displayed.")
             else:
-                await self.bot.say("The server messages have not been counted yet")
+                await self.bot.say("The server messages have not been counted yet.")
         else:
             try:
                 posts = ranks[ctx.message.server.id][user.id]["posts"]
-                await self.bot.say("{} has {} posts".format(user.name, posts))
+                await self.bot.say("{} has {} posts.".format(user.name, posts))
             except:
-                await self.bot.say("Something went terribly wrong")
+                await self.bot.say("Something went terribly wrong.")
         
 def check_folders():
     if not os.path.exists("data/economy"):

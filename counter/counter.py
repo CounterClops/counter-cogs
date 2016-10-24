@@ -162,32 +162,38 @@ class Counter:
         await self.bot.say("All messages counted")
 
     @top.command(pass_context=True, no_pm=True, name="display")
-    async def top_display(self, ctx):
+    async def top_display(self, ctx, user : discord.Member=None):
         "Display top posters"
         ranks = dataIO.load_json("data/counter/ranks.json")
-   
-        sorted_users = sorted(ranks[ctx.message.server.id], key=lambda x: ranks[ctx.message.server.id][x]["posts"], reverse=True)
-        
-        top = 10
-        if len(sorted_users) < top:
-            top = len(sorted_users)
-        topfive = sorted_users[:top]
-        highscore = "Top Posters:\n"
-        place = 1
-        for user in topfive:
-            highscore += str(place).ljust(len(str(top))+1)
-            highscore += (ranks[ctx.message.server.id][user]["username"]+" ").ljust(23-len(str(ranks[ctx.message.server.id][user]["posts"])))
-            highscore += str(ranks[ctx.message.server.id][user]["posts"]) + "\n"
-            place += 1
+        if user == None:
+            sorted_users = sorted(ranks[ctx.message.server.id], key=lambda x: ranks[ctx.message.server.id][x]["posts"], reverse=True)
             
-        if highscore:
-            if len(highscore) < 1985:
-                await self.bot.say("```py\n"+highscore+"```")
+            top = 10
+            if len(sorted_users) < top:
+                top = len(sorted_users)
+            topfive = sorted_users[:top]
+            highscore = "Top Posters:\n"
+            place = 1
+            for user in topfive:
+                highscore += str(place).ljust(len(str(top))+1)
+                highscore += (ranks[ctx.message.server.id][user]["username"]+" ").ljust(23-len(str(ranks[ctx.message.server.id][user]["posts"])))
+                highscore += str(ranks[ctx.message.server.id][user]["posts"]) + "\n"
+                place += 1
+                
+            if highscore:
+                if len(highscore) < 1985:
+                    await self.bot.say("```py\n"+highscore+"```")
+                else:
+                    await self.bot.say("The leaderboard is too big to be displayed.")
             else:
-                await self.bot.say("The leaderboard is too big to be displayed.")
+                await self.bot.say("The server messages have not been counted yet")
         else:
-            await self.bot.say("The server messages have not been counted yet")
-    
+            try:
+                posts = ranks[ctx.message.server.id][user.id]["posts"]
+                await self.bot.say("{} has {} posts".format(user.name, posts))
+            except:
+                await self.bot.say("Something went terribly wrong")
+        
 def check_folders():
     if not os.path.exists("data/economy"):
         print("Creating data/economy folder...")

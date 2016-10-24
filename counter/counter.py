@@ -119,7 +119,7 @@ class Counter:
 
     @commands.group(pass_context=True)
     async def top(self, ctx):
-        """Lodge moderator reports on users"""
+        """Top posters"""
         if ctx.invoked_subcommand is None:
             await send_cmd_help(ctx)
             return
@@ -163,6 +163,7 @@ class Counter:
 
     @top.command(pass_context=True, no_pm=True, name="display")
     async def top_display(self, ctx):
+        "Display top posters"
         ranks = dataIO.load_json("data/counter/ranks.json")
    
         sorted_users = sorted(ranks[ctx.message.server.id], key=lambda x: ranks[ctx.message.server.id][x]["posts"], reverse=True)

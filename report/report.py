@@ -107,7 +107,7 @@ class Report:
 
     @report.command(pass_context=True, no_pm=True, name="all")
     @checks.admin_or_permissions(administrator=True)
-    async def reports_all(self, ctx, user : discord.Member=None):
+    async def report_all(self, ctx, user : discord.Member=None):
         "Show all the reports that have been lodged against a user or in the server"
         if user == None:
             try:
@@ -124,17 +124,18 @@ class Report:
                 report_num = len(self.reports[ctx.message.server.id][user])
                 for id in range(report_num):
                     v = str(id)
-                    all_reports += """{0}-{1} (Active={6}): reported for "{2}" worth {3} on {4} by {5}\n""".format(v, self.reports[ctx.message.server.id][user][v]["name"], self.reports[ctx.message.server.id][user][v]["reason"], self.reports[ctx.message.server.id][user][v]["points"], self.reports[ctx.message.server.id][user][v]["created_at"], self.reports[ctx.message.server.id][user][v]["created_by"],self.reports[ctx.message.server.id][user][v]["active"])
+                    all_reports += """{0}-{1} (Active={6}): reported for "{2}" worth {3} on {4} by {5}\n\n""".format(v, self.reports[ctx.message.server.id][user][v]["name"], self.reports[ctx.message.server.id][user][v]["reason"], self.reports[ctx.message.server.id][user][v]["points"], self.reports[ctx.message.server.id][user][v]["created_at"], self.reports[ctx.message.server.id][user][v]["created_by"],self.reports[ctx.message.server.id][user][v]["active"])
                     if self.reports[ctx.message.server.id][user][v]["active"]:
                         total += self.reports[ctx.message.server.id][user][v]["points"]
                     if int(len(all_reports) - all_reports.count(' ')) > 1500:
-                        await self.bot.say("```"+all_reports+"```")
+                        await self.bot.say("```All reports\n"+all_reports+"```")
                         all_reports = ""
                         
             if all_reports != "":
                 await self.bot.say("```All reports\n"+all_reports+"```")
             else:
-                await self.bot.say("This user has no reports against them")  
+                if user == None:
+                    await self.bot.say("This user has no reports against them")  
         else:
             try:
                 self.reports[ctx.message.server.id][user.id]

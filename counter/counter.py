@@ -81,7 +81,7 @@ class Counter:
                 extra = "\n\n`I wonder how desperate you can get.`"
             elif user_1 == author or user_2 == author:
                 extra = "\n\n`You know, there's pathetic, and then there's you.`"
-        await self.bot.say(user_1.mention + msg + user_2.mention + extra)
+        await self.bot.say(user_1.name + msg + user_2.name + extra)
 
     @commands.command(pass_context=True, no_pm=True)
     async def playing(self, ctx, game=None):

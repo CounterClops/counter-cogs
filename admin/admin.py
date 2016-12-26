@@ -214,6 +214,7 @@ class Admin:
             await self.bot.say("User does not have that role.")
 
     @commands.command(pass_context=True, no_pm=True)
+    @checks.admin_or_permissions(manage_server=True)
     async def say(self, ctx, *, text):
         """Bot repeats what you tell it to, utility for scheduler."""
         channel = ctx.message.channel

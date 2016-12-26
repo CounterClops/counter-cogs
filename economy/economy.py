@@ -499,8 +499,8 @@ class Economy:
             reels[1][2] + " " + reels[2][2] + "\n"
 
         if line[0] == ":two:" and line[1] == ":two:" and line[2] == ":six:":
-            bid = bid * 5000
-            slotMsg = "{}{} 226! Your bet is multiplied * 5000! {}! ".format(
+            bid = bid * 100
+            slotMsg = "{}{} 226! Your bet is multiplied * 100! {}! ".format(
                 display_reels, message.author.mention, str(bid))
         elif line[0] == ":four_leaf_clover:" and line[1] == ":four_leaf_clover:" and line[2] == ":four_leaf_clover:":
             bid += 1000

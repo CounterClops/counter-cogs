@@ -16,6 +16,7 @@ class misc:
 
         if a != 0 or b != 0 or c != 0:
             choice = random.randrange(1,4)
+            #Work
             if choice == 1:
                 a = 0
             if choice == 2:

@@ -7,7 +7,6 @@ class misc:
     """My custom cog that does stuff"""
     def __init__(self, bot):
         self.bot = bot
-        self.bank = Bank(bot, "data/economy/bank.json")
 
     def role_colour():
         #Rand between 0 - 256
@@ -17,11 +16,11 @@ class misc:
 
         if a != 0 or b != 0 or c != 0:
             choice = random.randrange(1,4)
-            if choice === 1:
+            if choice == 1:
                 a = 0
-            if choice === 2:
+            if choice == 2:
                 b = 0
-            if choice === 3:
+            if choice == 3:
                 c = 0
 
         return a, b, c

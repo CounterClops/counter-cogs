@@ -83,24 +83,6 @@ class Counter:
                 extra = "\n\n`You know, there's pathetic, and then there's you.`"
         await self.bot.say(user_1.name + msg + user_2.name + extra)
 
-    @commands.command(pass_context=True, no_pm=True)
-    async def playing(self, ctx, game=None):
-        "Finds users playing a particular game"
-        
-        member_list = list()
-        number = 0
-        server = ctx.message.server
-
-        for member in server.members:
-            if member.game != None:
-                if str(member.game).lower() == str(game).lower():
-                    member_list.append(member.name)
-                    number += 1
-        
-        if number > 0:        
-            await self.bot.say("```{} users playing {}\n{}```".format(number, game, "\n".join(member_list)))
-        else:
-            await self.bot.say("```I either can't find {}, or you are a master of Engrish.```".format(game))
 
     @commands.command(pass_context=True, no_pm=True)
     @checks.admin_or_permissions(administrator=True)

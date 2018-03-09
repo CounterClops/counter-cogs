@@ -86,7 +86,7 @@ class Quotes:
             await self.bot.say(self._get_random_quote())
         else:
             perm = ctx.message.author.permissions_in(ctx.message.channel)
-            if perm.manage_server:
+            if perm.manage_roles:
                 self._add_quote(escape_mass_mentions(message))
                 await self.bot.say("Quote added.")
             else:

@@ -1,0 +1,8 @@
+{
+    "name": "Post Counting",
+    "author": ["CounterClops (CounterClops#0001)"],
+    "short": "Collects post information",
+    "description": "Collects information relating to user post totals and leaderboard counts",
+    "install_msg": "Post counting cog installed",
+    "tags": ["utility"]
+}

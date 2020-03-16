@@ -71,7 +71,7 @@ class Quotes(commands.Cog):
             temp_msg += (
                     f"{f'{pos}': <{quote_pos_len+2}}{quote}\n"
                     )
-            if pos % 10 == 0:
+            if pos % 5 == 0:
                 quote_groups.append(box(temp_msg, lang="md"))
                 temp_msg = ""
             pos += 1

@@ -1,0 +1,8 @@
+{
+    "name": "Quotes",
+    "author": ["CounterClops (CounterClops#0001)"],
+    "short": "Holds a simple list of quotes",
+    "description": "A list of classic quotes",
+    "install_msg": "Quotes cog installed",
+    "tags": ["utility"]
+}

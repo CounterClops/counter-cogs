@@ -28,9 +28,18 @@ class Quotes(commands.Cog):
         Prints a random quote
         """
         quote_list = await self.config.guild(ctx.guild).quote_list()
+        arguments = ctx.message.split(" ")
+
         if quote_list != []:
-            quote = randchoice(quote_list)
-            await ctx.send(box(f"{quote}"))
+            if len(arguments) > 1:
+                try:
+                    quote_pos = int(arguments[1])
+                    await ctx.send(box(f"{quote_list[quote_pos-1]}"))
+                except:
+                    pass
+            else:
+                quote = randchoice(quote_list)
+                await ctx.send(box(f"{quote}"))
 
     @checks.admin()
     @quote.group(name="add", invoke_without_command=True)

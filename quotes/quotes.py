@@ -69,7 +69,7 @@ class Quotes(commands.Cog):
 
         for quote in quote_list:
             temp_msg += (
-                    f"{f'{pos}': <{quote_pos_len+2}}{quote}\n"
+                    f"{f'{pos}': <{quote_pos_len+2}}{quote}\n\n"
                     )
             if pos % 5 == 0:
                 quote_groups.append(box(temp_msg, lang="md"))

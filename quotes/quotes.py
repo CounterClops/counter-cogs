@@ -33,7 +33,7 @@ class Quotes(commands.Cog):
 
     @checks.admin()
     @quote.group(name="add", invoke_without_command=True)
-    async def quote_add(self, ctx, quote : str):
+    async def quote_add(self, ctx, *, quote : str):
         """
         Adds a quote to the quote list
         """

@@ -28,7 +28,7 @@ class Quotes(commands.Cog):
         Prints a random quote
         """
         quote_list = await self.config.guild(ctx.guild).quote_list()
-        arguments = ctx.message.split(" ")
+        arguments = ctx.message.content.split(" ")
 
         if quote_list != []:
             if len(arguments) > 1:

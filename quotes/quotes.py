@@ -63,7 +63,8 @@ class Quotes(commands.Cog):
         pos = 1
         quote_groups = []
         quote_pos_len = len(str(len(quote_list))) # Gets the length of the largest quote number
-
+        temp_msg = ""
+        
         for quote in quote_list:
             temp_msg += (
                     f"{f'{pos}': <{quote_pos_len+2}}{quote}\n"

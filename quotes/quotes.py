@@ -28,8 +28,9 @@ class Quotes(commands.Cog):
         Prints a random quote
         """
         quote_list = await self.config.guild(ctx.guild).quote_list()
-        quote = randchoice(quote_list)
-        await ctx.send(box(f"{quote}"))
+        if quote_list != []:
+            quote = randchoice(quote_list)
+            await ctx.send(box(f"{quote}"))
 
     @checks.admin()
     @quote.group(name="add", invoke_without_command=True)
@@ -51,7 +52,8 @@ class Quotes(commands.Cog):
         if quote_pos > 0:
             actual_quote_pos = quote_pos - 1
             async with self.config.guild(ctx.guild).quote_list() as quote_list:
-                removed_quote = quote_list.pop(actual_quote_pos)
+                if actual_quote_pos < len(quote_list):
+                    removed_quote = quote_list.pop(actual_quote_pos)
             await ctx.send(f'Removed "{removed_quote}"')
 
     @quote.group(name="all", invoke_without_command=True)
@@ -64,7 +66,7 @@ class Quotes(commands.Cog):
         quote_groups = []
         quote_pos_len = len(str(len(quote_list))) # Gets the length of the largest quote number
         temp_msg = ""
-        
+
         for quote in quote_list:
             temp_msg += (
                     f"{f'{pos}': <{quote_pos_len+2}}{quote}\n"
@@ -73,5 +75,8 @@ class Quotes(commands.Cog):
                 quote_groups.append(box(temp_msg, lang="md"))
                 temp_msg = ""
             pos += 1
+
+        if temp_msg != "":
+            quote_groups.append(box(temp_msg, lang="md"))
 
         await menu(ctx, quote_groups, DEFAULT_CONTROLS)

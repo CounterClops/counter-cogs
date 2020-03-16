@@ -28,7 +28,11 @@ class Quotes(commands.Cog):
         Prints a random quote
         """
         quote_list = await self.config.guild(ctx.guild).quote_list()
+<<<<<<< HEAD
         if quote_list != []:
+=======
+        if quote_list != []
+>>>>>>> 86b543f823533f7d1b86b6521edfa8b9c2379119
             quote = randchoice(quote_list)
             await ctx.send(box(f"{quote}"))
 

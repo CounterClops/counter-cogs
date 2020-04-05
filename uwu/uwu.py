@@ -48,9 +48,21 @@ class UwU(commands.Cog):
                 # Custom modifications
                 # Below was taken into consideration due to affected
                 # string = string.replace("fe", "wwe").replace("fE", "wwE").replace("Fe", "We").replace("FE", "WE")
+
+                # Experimental method of reducing w's in uwu messages
+                """
+                words = string.split(" ")
+                for word in words:
+                    if "fe" in word.lower():
+                        string = string.replace("fe", "we").replace("fE", "wE").replace("Fe", "We").replace("FE", "WE")
+                    else:
+                        string = string.replace("e", "we").replace("E", "WE")
+                """
                 string = string.replace("fe", "we").replace("fE", "wE").replace("Fe", "We").replace("FE", "WE")
                 string = string.replace("e", "we").replace("E", "WE")
                 string = string.replace("o", "ow").replace("O", "OW")
+                # Bootleg cleanup
+                # string = string.replace("www", "w").replace("WWW", "w")
 
             # Suffixes
             if string.endswith("?"):

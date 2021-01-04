@@ -27,7 +27,7 @@ class PinHistory(commands.Cog):
 
     # Commands
     @checks.admin() # Checks if they have admin role - https://red-discordbot.readthedocs.io/en/latest/framework_checks.html
-    @commands.group(invoke_without_command=False)
+    @commands.group(invoke_without_command=True)
     async def pinhistory(self, ctx): #Recount group
         """
         Base postset group

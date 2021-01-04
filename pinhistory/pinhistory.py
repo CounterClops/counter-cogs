@@ -5,8 +5,8 @@ from redbot.core.utils.chat_formatting import box, humanize_list
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
 #timezone
-from pytz import timezone
-from datetime import datetime
+#from pytz import timezone
+from datetime import datetime, timezone
 
 # https://red-discordbot.readthedocs.io/en/latest/framework_utils.html
 # https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/economy/economy.py

@@ -33,7 +33,7 @@ class PinHistory(commands.Cog):
         Base postset group
         """
         # Should display current settings
-        await ctx.send("```{}```".format(self.config.guild(channel.guild)))
+        await ctx.send("```{}```".format(self.config.guild(ctx.channel.guild)))
 
     @checks.admin()
     @pinhistoy.group(name="pinlimit")
@@ -41,7 +41,7 @@ class PinHistory(commands.Cog):
         """
         Set the number of pins allowed in a monitored channel
         """
-        self.config.guild(channel.guild).pin_limit = pin_limit
+        self.config.guild(ctx.channel.guild).pin_limit = pin_limit
         await ctx.send("Set pin limit to {}".format(pin_limit))
 
     @checks.admin()
@@ -50,8 +50,8 @@ class PinHistory(commands.Cog):
         """
         Toggle if pinned messages should be managed. EG, deleted once they go over pin limit
         """
-        self.config.guild(channel.guild).manage_pins = not self.config.guild(channel.guild).manage_pins
-        await ctx.send("Set pin management to {}".format(self.config.guild(channel.guild).manage_pins))
+        self.config.guild(ctx.channel.guild).manage_pins = not self.config.guild(ctx.channel.guild).manage_pins
+        await ctx.send("Set pin management to {}".format(self.config.guild(ctx.channel.guild).manage_pins))
 
 
     @checks.admin()
@@ -61,12 +61,13 @@ class PinHistory(commands.Cog):
         Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
         """
         if channel == None:
-            if ctx.channel.id not in channel.id in self.config.guild(channel.guild).monitored_channels:
-                self.config.guild(channel.guild).monitored_channels.append(ctx.channel.id)
-                await ctx.send("Enabled monitoring for {}".format(channel.name))
-            else:
-                self.config.guild(channel.guild).monitored_channels.remove(ctx.channel.id)
-                await ctx.send("Disabled monitoring for {}".format(channel.name))
+            channel = ctx.channel
+        if ctx.channel.id not in channel.id in self.config.guild(channel.guild).monitored_channels:
+            self.config.guild(channel.guild).monitored_channels.append(channel.id)
+            await ctx.send("Enabled monitoring for {}".format(channel.name))
+        else:
+            self.config.guild(channel.guild).monitored_channels.remove(channel.id)
+            await ctx.send("Disabled monitoring for {}".format(channel.name))
 
     # https://leovoel.github.io/embed-visualizer/
     # https://cog-creators.github.io/discord-embed-sandbox/

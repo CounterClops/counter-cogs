@@ -131,6 +131,6 @@ class PinHistory(commands.Cog):
                     # Send embed with provided attachments
                     embed_message = self.create_embed(last_pinned_message)
                     for channel_id in archive_channels:
-                        channel = await fetch_channel(channel_id)
+                        channel = await bot.fetch_channel(channel_id)
                         await channel.send(embed=embed_message)
                     pin_history.append(last_pinned_message.id)

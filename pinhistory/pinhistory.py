@@ -27,10 +27,19 @@ class PinHistory(commands.Cog):
 
     # Commands
     @checks.admin() # Checks if they have admin role - https://red-discordbot.readthedocs.io/en/latest/framework_checks.html
-    @commands.group(invoke_without_command=True)
+    @commands.group(invoke_without_command=False)
     async def pinhistory(self, ctx): #Recount group
         """
         Base postset group
+        """
+        pass
+
+
+    @checks.admin()
+    @pinhistory.group(name="settings", invoke_without_command=True)
+    async def pinhistory_settings(self, ctx):
+        """
+        Display current settings
         """
         # Should display current settings
         settings = await self.config.guild(ctx.channel.guild).get_raw()
@@ -88,10 +97,10 @@ class PinHistory(commands.Cog):
         async with self.config.guild(channel.guild).archive_channels() as archive_channels:
             if channel.id not in archive_channels:
                 archive_channels.append(channel.id)
-                await ctx.send("Enabled monitoring for {}".format(channel.name))
+                await ctx.send("Enabled archiving to {}".format(channel.name))
             else:
                 archive_channels.remove(channel.id)
-                await ctx.send("Disabled monitoring for {}".format(channel.name))
+                await ctx.send("Disabled archiving for {}".format(channel.name))
 
     # https://leovoel.github.io/embed-visualizer/
     # https://cog-creators.github.io/discord-embed-sandbox/
@@ -101,7 +110,7 @@ class PinHistory(commands.Cog):
         # Create embed using information from message
         embed_message = discord.Embed(description=message.content)
         embed_message.set_author(name=message.author.display_name, url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
-        embed_message.set_footer(text=message.created_at)
+        embed_message.set_footer(text=str(message.created_at))
         return embed_message
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update
@@ -112,13 +121,14 @@ class PinHistory(commands.Cog):
         archive_channels = await self.config.guild(channel.guild).archive_channels()
         if (channel.id in monitored_channels) and (last_pin != None):
             # Check if this pin hasn't already been archived
+            last_pinned_message = (await channel.pins())[-1]
             async with self.config.guild(channel.guild).pin_history() as pin_history:
-                if last_pin.id not in pin_history:
+                if last_pinned_message.id not in pin_history:
                     # Get list of attachments from message
                     # Save list of attachment objects to a list of file like objects
                     # Send embed with provided attachments
-                    embed_message = create_embed(last_pin)
+                    embed_message = create_embed(last_pinned_message)
                     for channel_id in archive_channels:
                         channel = await fetch_channel(channel_id)
                         await channel.send(embed=embed_message)
-                    pin_history.append(last_pin.id)
+                    pin_history.append(last_pinned_message.id)

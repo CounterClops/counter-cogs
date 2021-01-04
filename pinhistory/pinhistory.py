@@ -113,10 +113,11 @@ class PinHistory(commands.Cog):
     def create_embed(self, message):
         "Create the correctly formatted embed for pinned messages"
         # Create embed using information from message
-        title = "[Channel]({}) | [Message]({})".format(message.channel.mention, message.jump_url)
-        embed_message = discord.Embed(title=title, description=message.content, timestamp=datetime.replace(message.created_at, tzinfo=timezone.utc))
+        embed_message = discord.Embed(description=message.content, timestamp=datetime.replace(message.created_at, tzinfo=timezone.utc))
         embed_message.set_author(name=message.author.display_name, url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
         embed_message.set_thumbnail(url=message.author.avatar_url)
+        embed_message.add_field(name="Sources", value="[Channel]({}) | [Message]({})".format(message.channel.mention, message.jump_url), inline=False)
+        # Australia/Perth
         return embed_message
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update

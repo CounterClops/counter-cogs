@@ -119,7 +119,7 @@ class PinHistory(commands.Cog):
         # message_date = timezone("UTC").localize(message.created_at).astimezone("Australia/Perth").strftime(r"%A, %X, %-d/%m/%Y %Z")
         # message_date = datetime.replace(message.created_at, tzinfo=timezone.utc)
         # Australia/Perth
-        embed_message.set_footer(text="Posted: {}".format(message_date))
+        embed_message.set_footer(text="Posted")
         return embed_message
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update

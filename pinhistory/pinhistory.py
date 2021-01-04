@@ -37,7 +37,7 @@ class PinHistory(commands.Cog):
         await ctx.send("```{}```".format(str(settings)))
 
     @checks.admin()
-    @pinhistory.group(name="pinlimit")
+    @pinhistory.group(name="pinlimit", invoke_without_command=True)
     async def pinhistory_pinlimit(self, ctx, new_pin_limit : int):
         """
         Set the number of pins allowed in a monitored channel
@@ -47,7 +47,7 @@ class PinHistory(commands.Cog):
             await ctx.send("Set pin limit to {}".format(pin_limit))
 
     @checks.admin()
-    @pinhistory.group(name="managepins")
+    @pinhistory.group(name="managepins", invoke_without_command=True)
     async def pinhistory_managepins(self, ctx):
         """
         Toggle if pinned messages should be managed. EG, deleted once they go over pin limit
@@ -57,8 +57,13 @@ class PinHistory(commands.Cog):
             await ctx.send("Set pin management to {}".format(new_value))
 
     @checks.admin()
-    @pinhistory.group(name="toggle")
-    async def pinhistory_toggle(self, ctx, channel=None):
+    @pinhistory.group(name="toggle", invoke_without_command=False)
+    async def pinhistory_toggle(self, ctx):
+        pass
+
+    @checks.admin()
+    @pinhistory_toggle.group(name="monitor", invoke_without_command=True)
+    async def pinhistory_toggle_monitor(self, ctx, channel=None):
         """
         Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
         """
@@ -70,6 +75,22 @@ class PinHistory(commands.Cog):
                 await ctx.send("Enabled monitoring for {}".format(channel.name))
             else:
                 monitored_channels.remove(channel.id)
+                await ctx.send("Disabled monitoring for {}".format(channel.name))
+
+    @checks.admin()
+    @pinhistory_toggle.group(name="archive", invoke_without_command=True)
+    async def pinhistory_toggle_archive(self, ctx, channel=None):
+        """
+        Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
+        """
+        if channel == None:
+            channel = ctx.channel
+        async with self.config.guild(channel.guild).archive_channels() as archive_channels:
+            if channel.id not in archive_channels:
+                archive_channels.append(channel.id)
+                await ctx.send("Enabled monitoring for {}".format(channel.name))
+            else:
+                archive_channels.remove(channel.id)
                 await ctx.send("Disabled monitoring for {}".format(channel.name))
 
     # https://leovoel.github.io/embed-visualizer/

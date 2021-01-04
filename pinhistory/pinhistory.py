@@ -6,6 +6,7 @@ from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
 #timezone
 from pytz import timezone
+from datetime import datetime
 
 # https://red-discordbot.readthedocs.io/en/latest/framework_utils.html
 # https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/economy/economy.py
@@ -115,9 +116,10 @@ class PinHistory(commands.Cog):
         embed_message = discord.Embed(description=message.content)
         embed_message.set_author(name=message.author.display_name, url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
         #embed_message.set_thumbnail(message.author.avatar_url)
-        message_date = timezone("UTC").localize(message.created_at).astimezone("Australia/Perth").strftime(r"%A, %X, %-d/%m/%Y %Z")
+        # message_date = timezone("UTC").localize(message.created_at).astimezone("Australia/Perth").strftime(r"%A, %X, %-d/%m/%Y %Z")
+        message_date = datetime.replace(message.created_at, tzinfo=timezone.utc).strftime(r"%A, %X, %-d/%m/%Y %Z")
         # Australia/Perth
-        embed_message.set_footer(text=message_date)
+        embed_message.set_footer(text="Posted: {}".format(message_date))
         return embed_message
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update

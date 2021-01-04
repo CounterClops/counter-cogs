@@ -3,6 +3,10 @@ import discord
 from redbot.core import commands, checks, Config, bot
 from redbot.core.utils.chat_formatting import box, humanize_list
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+
+#timezone
+from pytz import timezone
+
 # https://red-discordbot.readthedocs.io/en/latest/framework_utils.html
 # https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/economy/economy.py
 
@@ -111,7 +115,7 @@ class PinHistory(commands.Cog):
         embed_message = discord.Embed(description=message.content)
         embed_message.set_author(name=message.author.display_name, url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
         #embed_message.set_thumbnail(message.author.avatar_url)
-        message_date = message.created_at.strftime(r"%A, %X, %d/%m/%Y %Z")
+        message_date = timezone("Australia/Perth").localize(message.created_at).strftime(r"%A, %X, %-d/%m/%Y")
         embed_message.set_footer(text=message_date)
         return embed_message
 

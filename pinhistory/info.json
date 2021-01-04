@@ -1,0 +1,8 @@
+{
+    "name": "Pin history",
+    "author": ["CounterClops (CounterClops#0001)"],
+    "short": "Manages pinned message history",
+    "description": "Archives pinned messages in a seperate channel to bypass the 50 pin limit",
+    "install_msg": "Pin history cog installed",
+    "tags": ["utility"]
+}

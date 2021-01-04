@@ -28,7 +28,7 @@ class PinHistory(commands.Cog):
     # Commands
     @checks.admin() # Checks if they have admin role - https://red-discordbot.readthedocs.io/en/latest/framework_checks.html
     @commands.group(invoke_without_command=False)
-    async def pinhistoy(self, ctx): #Recount group
+    async def pinhistory(self, ctx): #Recount group
         """
         Base postset group
         """
@@ -36,8 +36,8 @@ class PinHistory(commands.Cog):
         await ctx.send("```{}```".format(self.config.guild(ctx.channel.guild)))
 
     @checks.admin()
-    @pinhistoy.group(name="pinlimit")
-    async def pinhistoy_pinlimit(self, ctx, pin_limit : int):
+    @pinhistory.group(name="pinlimit")
+    async def pinhistory_pinlimit(self, ctx, pin_limit : int):
         """
         Set the number of pins allowed in a monitored channel
         """
@@ -45,8 +45,8 @@ class PinHistory(commands.Cog):
         await ctx.send("Set pin limit to {}".format(pin_limit))
 
     @checks.admin()
-    @pinhistoy.group(name="managepins")
-    async def pinhistoy_managepins(self, ctx):
+    @pinhistory.group(name="managepins")
+    async def pinhistory_managepins(self, ctx):
         """
         Toggle if pinned messages should be managed. EG, deleted once they go over pin limit
         """
@@ -55,8 +55,8 @@ class PinHistory(commands.Cog):
 
 
     @checks.admin()
-    @pinhistoy.group(name="enable")
-    async def pinhistoy_monitor(self, ctx, channel=None):
+    @pinhistory.group(name="enable")
+    async def pinhistory_monitor(self, ctx, channel=None):
         """
         Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
         """

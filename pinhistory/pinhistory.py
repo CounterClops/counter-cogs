@@ -116,7 +116,7 @@ class PinHistory(commands.Cog):
         embed_message = discord.Embed(description=message.content, timestamp=datetime.replace(message.created_at, tzinfo=timezone.utc))
         embed_message.set_author(name=message.author.display_name, url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
         embed_message.set_thumbnail(url=message.author.avatar_url)
-        embed.add_field(name="jump_url", value="[Message]({})".format(message.jump_url), inline=False)
+        embed_message.add_field(name="jump_url", value="[Message]({})".format(message.jump_url), inline=False)
         # message_date = timezone("UTC").localize(message.created_at).astimezone("Australia/Perth").strftime(r"%A, %X, %-d/%m/%Y %Z")
         # message_date = datetime.replace(message.created_at, tzinfo=timezone.utc)
         # Australia/Perth

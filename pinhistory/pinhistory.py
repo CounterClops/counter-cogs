@@ -121,7 +121,7 @@ class PinHistory(commands.Cog):
         archive_channels = await self.config.guild(channel.guild).archive_channels()
         if (channel.id in monitored_channels) and (last_pin != None):
             # Check if this pin hasn't already been archived
-            last_pinned_message = (await channel.pins())[-1]
+            last_pinned_message = (await channel.pins())[1]
             print(await channel.pins())
             print(last_pinned_message)
             async with self.config.guild(channel.guild).pin_history() as pin_history:

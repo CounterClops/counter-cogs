@@ -105,7 +105,7 @@ class PinHistory(commands.Cog):
     # https://leovoel.github.io/embed-visualizer/
     # https://cog-creators.github.io/discord-embed-sandbox/
 
-    def create_embed(message):
+    def create_embed(self, message):
         "Create the correctly formatted embed for pinned messages"
         # Create embed using information from message
         embed_message = discord.Embed(description=message.content)

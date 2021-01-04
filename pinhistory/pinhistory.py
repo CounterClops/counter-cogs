@@ -33,7 +33,7 @@ class PinHistory(commands.Cog):
         Base postset group
         """
         # Should display current settings
-        await ctx.send("```{}```".format(self.config.guild(ctx.channel.guild)))
+        await ctx.send("```{}```".format(str(self.config.guild(ctx.channel.guild))))
 
     @checks.admin()
     @pinhistory.group(name="pinlimit")
@@ -55,14 +55,14 @@ class PinHistory(commands.Cog):
 
 
     @checks.admin()
-    @pinhistory.group(name="enable")
-    async def pinhistory_monitor(self, ctx, channel=None):
+    @pinhistory.group(name="toggle")
+    async def pinhistory_toggle(self, ctx, channel=None):
         """
         Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
         """
         if channel == None:
             channel = ctx.channel
-        if ctx.channel.id not in channel.id in self.config.guild(channel.guild).monitored_channels:
+        if channel.id not in self.config.guild(channel.guild).monitored_channels:
             self.config.guild(channel.guild).monitored_channels.append(channel.id)
             await ctx.send("Enabled monitoring for {}".format(channel.name))
         else:

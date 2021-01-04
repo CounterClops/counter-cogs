@@ -110,7 +110,9 @@ class PinHistory(commands.Cog):
         # Create embed using information from message
         embed_message = discord.Embed(description=message.content)
         embed_message.set_author(name=message.author.display_name, url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
-        embed_message.set_footer(text=str(message.created_at))
+        embed_message.set_thumbnail(message.author.avatar_url)
+        message_date = message.created_at.strftime(r"%A, %X, %d/%m/%Y %Z")
+        embed_message.set_footer(text=message_date)
         return embed_message
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update

@@ -122,6 +122,8 @@ class PinHistory(commands.Cog):
         if (channel.id in monitored_channels) and (last_pin != None):
             # Check if this pin hasn't already been archived
             last_pinned_message = (await channel.pins())[-1]
+            print(await channel.pins())
+            print(last_pinned_message)
             async with self.config.guild(channel.guild).pin_history() as pin_history:
                 if last_pinned_message.id not in pin_history:
                     # Get list of attachments from message

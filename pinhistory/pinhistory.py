@@ -123,7 +123,7 @@ class PinHistory(commands.Cog):
         files = []
         for attachment in message.attachments:
             attachment_bytes = BytesIO(await attachment.read())
-            files.append(discord.File(fp=attachment_bytes))
+            files.append(discord.File(fp=attachment_bytes, filename=attachment.filename))
         return files
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update

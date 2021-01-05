@@ -191,10 +191,7 @@ class PinHistory(commands.Cog):
 
             if not (await self.config.guild(message.guild).reupload_images()):
                 # Check if file is an image
-                print(message.attachments[0].filename)
-                print(os.path.splitext(message.attachments[0].filename)[1].lower())
-                if os.path.splitext(message.attachments[0].filename)[1].lower() in [".png", ".jpg", ".jpeg", ".gif"]:
-                    print(message.attachments[0].url)
+                if self.is_image(message.attachments[0].filename):
                     embed_message.set_image(url=message.attachments[0].url)
 
             embed_message.set_footer(text="{} {}".format(attachment_count, attachment_text))
@@ -203,9 +200,10 @@ class PinHistory(commands.Cog):
     async def return_attachments(self, message):
         "Returns attachments in a file list"
         files = []
-        for attachment in message.attachments:
-            attachment_bytes = BytesIO(await attachment.read())
-            files.append(discord.File(fp=attachment_bytes, filename=attachment.filename))
+            for attachment in message.attachments:
+                if (await self.config.guild(message.guild).reupload_images()) or not self.is_image(attachment.filename):
+                    attachment_bytes = BytesIO(await attachment.read())
+                    files.append(discord.File(fp=attachment_bytes, filename=attachment.filename))
         return files
 
     async def archive_pin(self, channel, message):
@@ -224,6 +222,13 @@ class PinHistory(commands.Cog):
                     archive_channel = channel.guild.get_channel(channel_id)
                     await archive_channel.send(embed=embed_message, files=files)
                 pin_history.append(message.id)
+
+    def is_image(self, filename):
+        """
+        Returns True if filename is image
+        """
+        return os.path.splitext(filename)[1].lower() in [".png", ".jpg", ".jpeg", ".gif"]:
+
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update
     # Monitored Events
     @commands.Cog.listener('on_guild_channel_pins_update') # Executes the below command when a channels pinned messages changes

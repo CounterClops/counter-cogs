@@ -200,10 +200,10 @@ class PinHistory(commands.Cog):
     async def return_attachments(self, message):
         "Returns attachments in a file list"
         files = []
-            for attachment in message.attachments:
-                if (await self.config.guild(message.guild).reupload_images()) or not self.is_image(attachment.filename):
-                    attachment_bytes = BytesIO(await attachment.read())
-                    files.append(discord.File(fp=attachment_bytes, filename=attachment.filename))
+        for attachment in message.attachments:
+            if (await self.config.guild(message.guild).reupload_images()) or not self.is_image(attachment.filename):
+                attachment_bytes = BytesIO(await attachment.read())
+                files.append(discord.File(fp=attachment_bytes, filename=attachment.filename))
         return files
 
     async def archive_pin(self, channel, message):

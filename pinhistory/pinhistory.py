@@ -189,7 +189,7 @@ class PinHistory(commands.Cog):
             else:
                 attachment_text = "attachments"
 
-            if not (await self.config.guild(channel.guild).reupload_images()):
+            if not (await self.config.guild(message.guild).reupload_images()):
                 # Check if file is an image
                 print(message.attachments[0].filename)
                 print(os.path.splitext(message.attachments[0].filename)[1].lower())

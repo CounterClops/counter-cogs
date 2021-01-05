@@ -4,7 +4,7 @@ from redbot.core import commands, checks, Config, bot
 from redbot.core.utils.chat_formatting import box, humanize_list
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
-from io import BufferedIOBase, BytesIO
+from io import BufferedIOBase, IOBase
 from datetime import datetime, timezone
 
 # https://red-discordbot.readthedocs.io/en/latest/framework_utils.html

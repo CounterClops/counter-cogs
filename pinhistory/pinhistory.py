@@ -84,7 +84,7 @@ class PinHistory(commands.Cog):
         Display current settings
         """
         # Should display current settings
-        settings = await self.config.guild(ctx.channel.guild).get_raw()
+        settings = await self.config.guild(ctx.guild).get_raw()
         await ctx.send("```{}```".format(str(settings)))
 
     @checks.admin()

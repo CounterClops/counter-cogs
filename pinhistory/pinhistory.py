@@ -185,8 +185,8 @@ class PinHistory(commands.Cog):
                 # Save list of attachment objects to a list of file like objects
                 # Send embed with provided attachments
                 embed_message = await self.create_embed(message)
-                files = await self.return_attachments(message)
                 for channel_id in archive_channels:
+                    files = await self.return_attachments(message)
                     archive_channel = channel.guild.get_channel(channel_id)
                     await archive_channel.send(embed=embed_message, files=files)
                 pin_history.append(message.id)

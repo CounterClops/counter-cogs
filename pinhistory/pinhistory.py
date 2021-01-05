@@ -181,18 +181,22 @@ class PinHistory(commands.Cog):
         embed_message.set_author(name="{}#{}".format(message.author.name, message.author.discriminator), url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
         embed_message.set_thumbnail(url=message.author.avatar_url)
         embed_message.add_field(name="Sources", value="{} | [Message]({})".format(message.channel.mention, message.jump_url), inline=False)
-        if not (await self.config.guild(channel.guild).reupload_images()):
-            # Check if file is an image
-            print(os.path.splitext(message.attachments[0].filename)[1].lower())
-            if os.path.splitext(message.attachments[0].filename)[1].lower() in [".png", ".jpg", ".jpeg", ".gif"]:
-                embed_message.set_image(url=message.attachments[0].url)
-                
+
         attachment_count = len(message.attachments)
         if attachment_count != 0:
             if attachment_count == 1:
                 attachment_text = "attachment"
             else:
                 attachment_text = "attachments"
+
+            if not (await self.config.guild(channel.guild).reupload_images()):
+                # Check if file is an image
+                print(message.attachments[0].filename)
+                print(os.path.splitext(message.attachments[0].filename)[1].lower())
+                if os.path.splitext(message.attachments[0].filename)[1].lower() in [".png", ".jpg", ".jpeg", ".gif"]:
+                    print(message.attachments[0].url)
+                    embed_message.set_image(url=message.attachments[0].url)
+
             embed_message.set_footer(text="{} {}".format(attachment_count, attachment_text))
         return embed_message
 

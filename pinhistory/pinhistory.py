@@ -239,7 +239,11 @@ class PinHistory(commands.Cog):
             pins_len = len(pins)
             pin_limit = await self.config.guild(channel.guild).pin_limit()
 
-            if pins_len >= pin_limit:
+            if pins_len > pin_limit:
+                # pin_limit - pins_len
+                # 48-48 = 0 [0:]
+                # 48-49 = -1 [-1:]
+                # 48-47 = 1 [1:0]
                 for pin in pins[pin_limit-pins_len:]:
                     #test_channel = channel.guild.get_channel(689109947895906378)
                     #await test_channel.send("Removing {}".format(pin.jump_url))

@@ -53,7 +53,7 @@ class PinHistory(commands.Cog):
         Clears all pin history
         """
         async with self.config.guild(ctx.guild).pin_history() as pin_history:
-            pin_history = []
+            pin_history.clear()
         await ctx.send("Cleared pin history")
 
     @checks.admin()

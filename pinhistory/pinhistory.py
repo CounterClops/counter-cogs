@@ -128,35 +128,43 @@ class PinHistory(commands.Cog):
 
     @checks.admin()
     @pinhistory_toggle.group(name="monitor", invoke_without_command=True)
-    async def pinhistory_toggle_monitor(self, ctx, channel=None):
+    async def pinhistory_toggle_monitor(self, ctx):
         """
         Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
         """
-        if channel == None:
-            channel = ctx.channel
+        if ctx.message.channel_mentions == []:
+            channels = [ctx.channel]
+        else:
+            channels = ctx.message.channel_mentions
+
         async with self.config.guild(channel.guild).monitored_channels() as monitored_channels:
-            if channel.id not in monitored_channels:
-                monitored_channels.append(channel.id)
-                await ctx.send("Enabled monitoring for {}".format(channel.name))
-            else:
-                monitored_channels.remove(channel.id)
-                await ctx.send("Disabled monitoring for {}".format(channel.name))
+            for channel in channels:
+                if channel.id not in monitored_channels:
+                    monitored_channels.append(channel.id)
+                    await ctx.send("Enabled monitoring for {}".format(channel.name))
+                else:
+                    monitored_channels.remove(channel.id)
+                    await ctx.send("Disabled monitoring for {}".format(channel.name))
 
     @checks.admin()
     @pinhistory_toggle.group(name="archive", invoke_without_command=True)
-    async def pinhistory_toggle_archive(self, ctx, channel=None):
+    async def pinhistory_toggle_archive(self, ctx):
         """
         Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
         """
-        if channel == None:
-            channel = ctx.channel
+        if ctx.message.channel_mentions == []:
+            channels = [ctx.channel]
+        else:
+            channels = ctx.message.channel_mentions
+
         async with self.config.guild(channel.guild).archive_channels() as archive_channels:
-            if channel.id not in archive_channels:
-                archive_channels.append(channel.id)
-                await ctx.send("Enabled archiving to {}".format(channel.name))
-            else:
-                archive_channels.remove(channel.id)
-                await ctx.send("Disabled archiving for {}".format(channel.name))
+            for channel in channels:
+                if channel.id not in archive_channels:
+                    archive_channels.append(channel.id)
+                    await ctx.send("Enabled archiving to {}".format(channel.name))
+                else:
+                    archive_channels.remove(channel.id)
+                    await ctx.send("Disabled archiving for {}".format(channel.name))
 
     # https://leovoel.github.io/embed-visualizer/
     # https://cog-creators.github.io/discord-embed-sandbox/

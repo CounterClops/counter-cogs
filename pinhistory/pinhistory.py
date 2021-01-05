@@ -107,7 +107,7 @@ class PinHistory(commands.Cog):
         """
         Set the number of pins allowed in a monitored channel
         """
-        async with self.config.guild(ctx.channel.guild).pin_limit() as pin_limit:
+        async with self.config.guild(ctx.guild).pin_limit() as pin_limit:
             pin_limit = new_pin_limit
             await ctx.send("Set pin limit to {}".format(pin_limit))
 
@@ -137,7 +137,7 @@ class PinHistory(commands.Cog):
         else:
             channels = ctx.message.channel_mentions
 
-        async with self.config.guild(channel.guild).monitored_channels() as monitored_channels:
+        async with self.config.guild(ctx.guild).monitored_channels() as monitored_channels:
             for channel in channels:
                 if channel.id not in monitored_channels:
                     monitored_channels.append(channel.id)
@@ -157,7 +157,7 @@ class PinHistory(commands.Cog):
         else:
             channels = ctx.message.channel_mentions
 
-        async with self.config.guild(channel.guild).archive_channels() as archive_channels:
+        async with self.config.guild(ctx.guild).archive_channels() as archive_channels:
             for channel in channels:
                 if channel.id not in archive_channels:
                     archive_channels.append(channel.id)

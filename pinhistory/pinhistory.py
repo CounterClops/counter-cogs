@@ -125,6 +125,16 @@ class PinHistory(commands.Cog):
             await ctx.send("Set pin management to {}".format(new_value))
 
     @checks.admin()
+    @pinhistory.group(name="restore", invoke_without_command=True)
+    async def pinhistory_restore(self, ctx):
+        """
+        Restore pins from pin_history
+        """
+        message = await ctx.channel.fetch_message(795873307856601088)
+        print(message)
+
+
+    @checks.admin()
     @pinhistory.group(name="toggle", invoke_without_command=False)
     async def pinhistory_toggle(self, ctx):
         pass
@@ -240,10 +250,7 @@ class PinHistory(commands.Cog):
             pin_limit = await self.config.guild(channel.guild).pin_limit()
 
             if pins_len > pin_limit:
-                # pin_limit - pins_len
-                # 48-48 = 0 [0:]
-                # 48-49 = -1 [-1:]
-                # 48-47 = 1 [1:0]
+                # pin_limit - pins_len / 48-49 = -1 [-1:]
                 for pin in pins[pin_limit-pins_len:]:
                     #test_channel = channel.guild.get_channel(689109947895906378)
                     #await test_channel.send("Removing {}".format(pin.jump_url))

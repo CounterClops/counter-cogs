@@ -132,6 +132,7 @@ class PinHistory(commands.Cog):
         """
         Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
         """
+        print(ctx.message.channel_mentions)
         if ctx.message.channel_mentions == []:
             channels = [ctx.channel]
         else:

@@ -57,6 +57,20 @@ class PinHistory(commands.Cog):
         await ctx.send("Cleared pin history")
 
     @checks.admin()
+    @pinhistory_clear.group(name="all", invoke_without_command=True)
+    async def pinhistory_clear_all(self, ctx):
+        """
+        Clears all pin history
+        """
+        async with self.config.guild(ctx.guild).pin_history() as pin_history:
+            pin_history.clear()
+        async with self.config.guild(ctx.guild).monitored_channels() as monitored_channels:
+            monitored_channels.clear()
+        async with self.config.guild(ctx.guild).archive_channels() as archive_channels:
+            archive_channels.clear()
+        await ctx.send("Cleared pin settings/history")
+
+    @checks.admin()
     @pinhistory.group(name="update", invoke_without_command=False)
     async def pinhistory_update(self, ctx):
         """

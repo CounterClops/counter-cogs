@@ -4,7 +4,7 @@ from redbot.core import commands, checks, Config, bot
 from redbot.core.utils.chat_formatting import box, humanize_list
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
-from io import BufferedIOBase, IOBase, BytesIO
+from io import BytesIO
 from datetime import datetime, timezone
 
 # https://red-discordbot.readthedocs.io/en/latest/framework_utils.html
@@ -113,8 +113,9 @@ class PinHistory(commands.Cog):
         "Create the correctly formatted embed for pinned messages"
         # Create embed using information from message
         embed_message = discord.Embed(description=message.content, timestamp=datetime.replace(message.created_at, tzinfo=timezone.utc))
-        embed_message.set_author(name=message.author.display_name, url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
+        embed_message.set_author(name=message.author.name, url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
         embed_message.set_thumbnail(url=message.author.avatar_url)
+        embed_message.title = "{} posted".format(message.author.display_name)
         embed_message.add_field(name="Sources", value="{} | [Message]({})".format(message.channel.mention, message.jump_url), inline=False)
         return embed_message
 

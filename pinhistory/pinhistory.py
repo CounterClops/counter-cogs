@@ -126,7 +126,7 @@ class PinHistory(commands.Cog):
 
     @checks.admin()
     @pinhistory.group(name="restore", invoke_without_command=True)
-    async def pinhistory_restore(self, ctx, id : int):
+    async def pinhistory_restore(self, ctx):
         """
         Restore pins from pin_history
         """

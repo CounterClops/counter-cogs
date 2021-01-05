@@ -121,7 +121,7 @@ class PinHistory(commands.Cog):
         "Returns attachments in a file list"
         files = []
         for attachment in message.attachments:
-            files.append(discord.File(fp=attachment.read))
+            files.append(discord.File(fp=attachment.read()))
         return files
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update

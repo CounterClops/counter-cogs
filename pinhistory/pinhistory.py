@@ -91,7 +91,7 @@ class PinHistory(commands.Cog):
             monitored_channel = ctx.guild.get_channel(monitored_channel_id)
             for pin in reversed(await monitored_channel.pins()):
                 await self.archive_pin(monitored_channel, pin)
-                await self.manage_pins(monitored_channel)
+            await self.manage_pins(monitored_channel)
         await ctx.send("Finished pin update")
 
     @checks.admin()
@@ -241,7 +241,8 @@ class PinHistory(commands.Cog):
 
             if pins_len >= pin_limit:
                 for pin in pins[pin_limit-pins_len:]:
-                    await channel.send("Removing {}".format(pin.jump_url))
+                    test_channel = channel.guild.get_channel("689109947895906378")
+                    await test_channel.send("Removing {}".format(pin.jump_url))
                     # await pin.unpin(reason="Pin clean up")
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update

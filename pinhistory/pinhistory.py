@@ -5,6 +5,7 @@ from redbot.core.utils.chat_formatting import box, humanize_list
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
 from io import BytesIO
+import os
 from datetime import datetime, timezone
 
 # https://red-discordbot.readthedocs.io/en/latest/framework_utils.html
@@ -22,9 +23,10 @@ class PinHistory(commands.Cog):
         default_guild = {
             "pin_limit": 50, # Maximum number of pinned messages
             "manage_pins": True, # Whether the bot should manage pinned messages in the monitored channels (Remove old pins etc)
+            "reupload_attachments": False,
             "pin_history": [], # List of ID's for all pinned messages that have been archived
             "monitored_channels": [],  # Channels to monitor for changes in pins
-            "archive_channels": [], # Channels to archive the pinned messages to
+            "archive_channels": [] # Channels to archive the pinned messages to
         }
 
         self.config.register_guild(**default_guild)
@@ -179,6 +181,10 @@ class PinHistory(commands.Cog):
         embed_message.set_author(name="{}#{}".format(message.author.name, message.author.discriminator), url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
         embed_message.set_thumbnail(url=message.author.avatar_url)
         embed_message.add_field(name="Sources", value="{} | [Message]({})".format(message.channel.mention, message.jump_url), inline=False)
+        if await self.config.guild(channel.guild).reupload_attachments() not True:
+            # Check if file is an image
+            if os.path.splitext(message.attachments[0].filename)[1].lower() in ["png", "jpg", "jpeg", "gif"]:
+                embed_message.set_image(url=message.attachments[0].url)
         attachment_count = len(message.attachments)
         if attachment_count != 0:
             if attachment_count == 1:

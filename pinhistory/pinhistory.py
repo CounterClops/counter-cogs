@@ -130,8 +130,11 @@ class PinHistory(commands.Cog):
         """
         Restore pins from pin_history
         """
-        message = await ctx.channel.fetch_message(795873307856601088)
-        print(message)
+        # https://discordpy.readthedocs.io/en/latest/api.html#discord.MessageType
+        id = 795873307856601088
+        message = await ctx.channel.fetch_message(id)
+        value = message.type == discord.MessageType.pins_add
+        await ctx.send("Message is {}".format(value))
 
 
     @checks.admin()

@@ -181,7 +181,7 @@ class PinHistory(commands.Cog):
         embed_message.set_author(name="{}#{}".format(message.author.name, message.author.discriminator), url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
         embed_message.set_thumbnail(url=message.author.avatar_url)
         embed_message.add_field(name="Sources", value="{} | [Message]({})".format(message.channel.mention, message.jump_url), inline=False)
-        if await self.config.guild(channel.guild).reupload_attachments() not True:
+        if not (await self.config.guild(channel.guild).reupload_attachments()):
             # Check if file is an image
             if os.path.splitext(message.attachments[0].filename)[1].lower() in ["png", "jpg", "jpeg", "gif"]:
                 embed_message.set_image(url=message.attachments[0].url)

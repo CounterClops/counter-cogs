@@ -115,7 +115,7 @@ class PinHistory(commands.Cog):
         embed_message = discord.Embed(description=message.content, timestamp=datetime.replace(message.created_at, tzinfo=timezone.utc))
         embed_message.set_author(name="{}#{}".format(message.author.name, message.author.discriminator), url="https://discord.com/users/{}".format(message.author.id), icon_url=message.author.avatar_url)
         embed_message.set_thumbnail(url=message.author.avatar_url)
-        embed_message.title = "{} posted".format(message.author.display_name)
+        embed_message.title = "**{}** posted".format(message.author.display_name)
         embed_message.add_field(name="Sources", value="{} | [Message]({})".format(message.channel.mention, message.jump_url), inline=False)
         return embed_message
 

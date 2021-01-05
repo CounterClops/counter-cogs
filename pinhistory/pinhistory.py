@@ -153,7 +153,7 @@ class PinHistory(commands.Cog):
         embed_message.add_field(name="Sources", value="{} | [Message]({})".format(message.channel.mention, message.jump_url), inline=False)
         attachment_count = len(message.attachments)
         if attachment_count != 0:
-            if attachment_count = 1:
+            if attachment_count == 1:
                 attachment_text = "attachment"
             else:
                 attachment_text = "attachments"

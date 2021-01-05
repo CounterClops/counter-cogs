@@ -241,7 +241,7 @@ class PinHistory(commands.Cog):
 
             if pins_len >= pin_limit:
                 for pin in pins[pin_limit-pins_len:]:
-                    test_channel = channel.guild.get_channel("689109947895906378")
+                    test_channel = channel.guild.get_channel(689109947895906378)
                     await test_channel.send("Removing {}".format(pin.jump_url))
                     # await pin.unpin(reason="Pin clean up")
 

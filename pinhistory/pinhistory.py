@@ -233,12 +233,13 @@ class PinHistory(commands.Cog):
         """
         Clears away excess pins in the pinned message tab
         """
-        reversed_pins = reversed(await channel.pins())
-        reversed_pins_len = len(reversed_pins)
+        pins = await channel.pins()
+        pins_len = len(pins)
+        reversed_pins = reversed()
         pin_limit = await self.config.guild(channel.guild).pin_limit()
 
-        if reversed_pins_len >= pin_limit:
-            for pin in reversed_pins[:reversed_pins_len-pin_limit]:
+        if pins_len >= pin_limit:
+            for pin in reversed_pins[:pins_len-pin_limit]:
                 await channel.send("Removing {}".format(pin.jump_url))
             # await
 

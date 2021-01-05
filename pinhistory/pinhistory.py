@@ -52,7 +52,7 @@ class PinHistory(commands.Cog):
         """
         Clears all pin history
         """
-        async with self.config.guild(channel.guild).pin_history() as pin_history:
+        async with self.config.guild(ctx.guild).pin_history() as pin_history:
             pin_history = []
 
     @checks.admin()
@@ -69,7 +69,7 @@ class PinHistory(commands.Cog):
         """
         Updates all pin history
         """
-        monitored_channels = await self.config.guild(channel.guild).monitored_channels()
+        monitored_channels = await self.config.guild(ctx.guild).monitored_channels()
         for monitored_channel_id in monitored_channels:
             monitored_channel = ctx.guild.get_channel(monitored_channel_id)
             for pin in await monitored_channel.pins():

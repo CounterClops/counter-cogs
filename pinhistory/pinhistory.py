@@ -74,7 +74,7 @@ class PinHistory(commands.Cog):
         for monitored_channel_id in monitored_channels:
             monitored_channel = ctx.guild.get_channel(monitored_channel_id)
             for pin in await monitored_channel.pins():
-                await self.archive_pin(pin)
+                await self.archive_pin(monitored_channel, pin)
         await ctx.send("Finished pin update")
 
     @checks.admin()

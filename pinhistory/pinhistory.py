@@ -132,12 +132,16 @@ class PinHistory(commands.Cog):
         """
         # https://discordpy.readthedocs.io/en/latest/api.html#discord.MessageType
         pin_history = await self.config.guild(ctx.guild).pin_history()
-        message = await ctx.channel.fetch_message(id)
+        #message = await ctx.channel.fetch_message(id)
         main_channel = ctx.guild.get_channel(150609044665532416)
         # value = message.type == discord.MessageType.pins_add # It worked, returns true if the message is pin add
-        await ctx.send("Message: {}".format(str(message)))
-        value = (await main_channel.fetch_message(pin_history[0])).jump_url
-        await ctx.send("Return {}".format(value))
+        #await ctx.send("Message: {}".format(str(message)))
+        #value = (await main_channel.fetch_message(pin_history[0])).jump_url # First message, so going from here will restore pins
+        #await ctx.send("Return {}".format(value))
+
+        for pin_id in pin_history:
+            pin_message = await main_channel.fetch_message(pin_id)
+            await pin_message.pin()
 
 
     @checks.admin()
@@ -272,3 +276,8 @@ class PinHistory(commands.Cog):
             last_pinned_message = (await channel.pins())[0]
             await self.archive_pin(channel, last_pinned_message)
             await self.manage_pins(channel)
+
+    @commands.Cog.listener('on_message') # Executes the below command when a channels pinned messages changes
+    async def on_pinned_message(self, message):
+        if message.type == discord.MessageType.pins_add:
+            await message.delete()

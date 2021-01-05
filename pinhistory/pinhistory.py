@@ -69,7 +69,11 @@ class PinHistory(commands.Cog):
         """
         Updates all pin history
         """
-        pass
+        monitored_channels = await self.config.guild(channel.guild).monitored_channels()
+        for monitored_channel_id in monitored_channels:
+            monitored_channel = ctx.guild.get_channel(monitored_channel_id)
+            for pin in await monitored_channel.pins():
+                await self.archive_pin(pin)
 
     @checks.admin()
     @pinhistory.group(name="settings", invoke_without_command=True)

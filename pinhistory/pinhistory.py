@@ -4,7 +4,7 @@ from redbot.core import commands, checks, Config, bot
 from redbot.core.utils.chat_formatting import box, humanize_list
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
-from io import BufferedIOBase
+from io import BufferedIOBase, BytesIO
 from datetime import datetime, timezone
 
 # https://red-discordbot.readthedocs.io/en/latest/framework_utils.html
@@ -122,7 +122,7 @@ class PinHistory(commands.Cog):
         "Returns attachments in a file list"
         files = []
         for attachment in message.attachments:
-            attachment_bytes = BufferedIOBase(await attachment.read())
+            attachment_bytes = IOBase(await attachment.read())
             files.append(discord.File(fp=attachment_bytes))
         return files
 

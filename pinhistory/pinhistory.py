@@ -36,7 +36,7 @@ class PinHistory(commands.Cog):
     @commands.group(invoke_without_command=False)
     async def pinhistory(self, ctx): #Recount group
         """
-        Base pinhistory group
+        Commands related to controlling the automatic pin management / archiving
         """
         pass
 
@@ -44,7 +44,7 @@ class PinHistory(commands.Cog):
     @pinhistory.group(name="clear", invoke_without_command=False)
     async def pinhistory_clear(self, ctx):
         """
-        Base clear group
+        Sub commands allow different options / history to be cleared
         """
         pass
 
@@ -52,7 +52,7 @@ class PinHistory(commands.Cog):
     @pinhistory_clear.group(name="history", invoke_without_command=True)
     async def pinhistory_clear_history(self, ctx):
         """
-        Clears all pin history
+        Clears all recorded pin history
         """
         async with self.config.guild(ctx.guild).pin_history() as pin_history:
             pin_history.clear()
@@ -62,7 +62,7 @@ class PinHistory(commands.Cog):
     @pinhistory_clear.group(name="all", invoke_without_command=True)
     async def pinhistory_clear_all(self, ctx):
         """
-        Clears all pin history
+        Clears pin history along with configured monitor/archive channels
         """
         async with self.config.guild(ctx.guild).pin_history() as pin_history:
             pin_history.clear()
@@ -76,7 +76,7 @@ class PinHistory(commands.Cog):
     @pinhistory.group(name="update", invoke_without_command=False)
     async def pinhistory_update(self, ctx):
         """
-        Base update group. Configure where to update archived pins
+        Commands related to forcing pin history to be updated. Useful when a new monitor channel is configured
         """
         pass
 
@@ -84,7 +84,7 @@ class PinHistory(commands.Cog):
     @pinhistory_update.group(name="all", invoke_without_command=True)
     async def pinhistory_update_all(self, ctx):
         """
-        Updates all pin history
+        Updates pin history for all monitored channels
         """
         monitored_channels = await self.config.guild(ctx.guild).monitored_channels()
         for monitored_channel_id in monitored_channels:
@@ -98,7 +98,7 @@ class PinHistory(commands.Cog):
     @pinhistory.group(name="settings", invoke_without_command=True)
     async def pinhistory_settings(self, ctx):
         """
-        Display current settings
+        Displays current settings and pin history
         """
         # Should display current settings
         settings = await self.config.guild(ctx.guild).get_raw()
@@ -108,7 +108,7 @@ class PinHistory(commands.Cog):
     @pinhistory.group(name="pinlimit", invoke_without_command=True)
     async def pinhistory_pinlimit(self, ctx, new_pin_limit : int):
         """
-        Set the number of pins allowed in a monitored channel
+        Set the limit on how many pins can remain pinned before the oldest will be removed
         """
         async with self.config.guild(ctx.guild).pin_limit() as pin_limit:
             pin_limit = new_pin_limit
@@ -118,7 +118,8 @@ class PinHistory(commands.Cog):
     @pinhistory.group(name="managepins", invoke_without_command=True)
     async def pinhistory_managepins(self, ctx):
         """
-        Toggle if pinned messages should be managed. EG, deleted once they go over pin limit
+        Toggle if pin management should be enabled.
+        Disabling this will prevent automatic unpinning of pinned messages
         """
         async with self.config.guild(ctx.channel.guild).manage_pins() as manage_pins:
             manage_pins = not manage_pins
@@ -142,13 +143,17 @@ class PinHistory(commands.Cog):
     @checks.admin()
     @pinhistory.group(name="toggle", invoke_without_command=False)
     async def pinhistory_toggle(self, ctx):
+        """
+        Commands related to toggling monitored and archived channels
+        """
         pass
 
     @checks.admin()
     @pinhistory_toggle.group(name="monitor", invoke_without_command=True)
     async def pinhistory_toggle_monitor(self, ctx):
         """
-        Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
+        Set channel to monitor for pin changes.
+        If no channel mentions are provided, it will default to channel command was used in.
         """
         if ctx.message.channel_mentions == []:
             channels = [ctx.channel]
@@ -168,7 +173,8 @@ class PinHistory(commands.Cog):
     @pinhistory_toggle.group(name="archive", invoke_without_command=True)
     async def pinhistory_toggle_archive(self, ctx):
         """
-        Monitors channel, if none is given it'll use the one in context. If one is mentioned, it'll use that one
+        Set channel to archive pinned messages in.
+        If no channel mentions are provided, it will default to channel command was used in.
         """
         if ctx.message.channel_mentions == []:
             channels = [ctx.channel]
@@ -202,29 +208,31 @@ class PinHistory(commands.Cog):
         if attachment_count != 0:
             if attachment_count == 1:
                 attachment_text = "attachment"
+                # The below will only run with 1 attachment, and only if that attachment is an image
+                if not (await self.config.guild(message.guild).reupload_images()):
+                    # Check if file is an image
+                    if self.is_image(message.attachments[0].filename):
+                        embed_message.set_image(url=message.attachments[0].url)
             else:
                 attachment_text = "attachments"
-
-            if not (await self.config.guild(message.guild).reupload_images()):
-                # Check if file is an image
-                if self.is_image(message.attachments[0].filename):
-                    embed_message.set_image(url=message.attachments[0].url)
 
             embed_message.set_footer(text="{} {}".format(attachment_count, attachment_text))
         return embed_message
 
     async def return_attachments(self, message):
-        "Returns attachments in a file list"
+        """
+        Returns a list of Discord attachments as discord.File objects
+        """
         files = []
         for attachment in message.attachments:
-            if (await self.config.guild(message.guild).reupload_images()) or not self.is_image(attachment.filename):
+            if (await self.config.guild(message.guild).reupload_images()) or not self.is_image(attachment.filename) or len(message.attachments) > 1:
                 attachment_bytes = BytesIO(await attachment.read())
                 files.append(discord.File(fp=attachment_bytes, filename=attachment.filename))
         return files
 
     async def archive_pin(self, channel, message):
         """
-        Archive pinned messages
+        Archive a pinned message in a provided channel
         """
         archive_channels = await self.config.guild(channel.guild).archive_channels()
         async with self.config.guild(channel.guild).pin_history() as pin_history:
@@ -241,24 +249,21 @@ class PinHistory(commands.Cog):
 
     def is_image(self, filename):
         """
-        Returns True if filename is image
+        Returns True if filename is one of the images listed below
         """
         return os.path.splitext(filename)[1].lower() in [".png", ".jpg", ".jpeg", ".gif"]
 
     async def manage_pins(self, channel):
         """
-        Clears away excess pins in the pinned message tab
+        Removes pins that are past the pin_limit
         """
         if await self.config.guild(channel.guild).manage_pins():
             pins = await channel.pins()
             pins_len = len(pins)
             pin_limit = await self.config.guild(channel.guild).pin_limit()
 
-            if pins_len > pin_limit:
-                # pin_limit - pins_len / 48-49 = -1 [-1:]
+            if pins_len > pin_limit: # Do not let code proceed with pins_len == pin_limit. Will delete all pins [0:]
                 for pin in pins[pin_limit-pins_len:]:
-                    #test_channel = channel.guild.get_channel(689109947895906378)
-                    #await test_channel.send("Removing {}".format(pin.jump_url))
                     await pin.unpin(reason="Pin clean up")
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update

@@ -91,6 +91,7 @@ class PinHistory(commands.Cog):
             monitored_channel = ctx.guild.get_channel(monitored_channel_id)
             for pin in reversed(await monitored_channel.pins()):
                 await self.archive_pin(monitored_channel, pin)
+                await self.manage_pins(monitored_channel)
         await ctx.send("Finished pin update")
 
     @checks.admin()
@@ -233,14 +234,15 @@ class PinHistory(commands.Cog):
         """
         Clears away excess pins in the pinned message tab
         """
-        pins = await channel.pins()
-        pins_len = len(pins)
-        pin_limit = await self.config.guild(channel.guild).pin_limit()
+        if await self.config.guild(channel.guild).manage_pins():
+            pins = await channel.pins()
+            pins_len = len(pins)
+            pin_limit = await self.config.guild(channel.guild).pin_limit()
 
-        if pins_len >= pin_limit:
-            for pin in pins[pin_limit-pins_len:]:
-                await channel.send("Removing {}".format(pin.jump_url))
-            # await
+            if pins_len >= pin_limit:
+                for pin in pins[pin_limit-pins_len:]:
+                    await channel.send("Removing {}".format(pin.jump_url))
+                    # await pin.unpin(reason="Pin clean up")
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update
     # Monitored Events

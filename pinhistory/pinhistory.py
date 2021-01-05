@@ -233,7 +233,7 @@ class PinHistory(commands.Cog):
         """
         Clears away excess pins in the pinned message tab
         """
-        reversed_pins = reversed(await channel.pins()
+        reversed_pins = reversed(await channel.pins())
         reversed_pins_len = len(reversed_pins)
         pin_limit = await self.config.guild(channel.guild).pin_limit()
 

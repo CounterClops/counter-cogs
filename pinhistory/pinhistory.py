@@ -238,7 +238,7 @@ class PinHistory(commands.Cog):
         pin_limit = await self.config.guild(channel.guild).pin_limit()
 
         if pins_len >= pin_limit:
-            for pin in pins[:pin_limit-pins_len]:
+            for pin in pins[pin_limit-pins_len:]:
                 await channel.send("Removing {}".format(pin.jump_url))
             # await
 

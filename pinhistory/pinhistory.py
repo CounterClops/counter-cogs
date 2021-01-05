@@ -235,7 +235,7 @@ class PinHistory(commands.Cog):
         """
         pins = await channel.pins()
         pins_len = len(pins)
-        reversed_pins = reversed()
+        reversed_pins = reversed(pins)
         pin_limit = await self.config.guild(channel.guild).pin_limit()
 
         if pins_len >= pin_limit:

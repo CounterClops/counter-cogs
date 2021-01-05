@@ -21,7 +21,7 @@ class PinHistory(commands.Cog):
     def __init__(self):
         self.config = Config.get_conf(self, identifier=108586980896678, force_registration=True)
         default_guild = {
-            "pin_limit": 50, # Maximum number of pinned messages
+            "pin_limit": 48, # Maximum number of pinned messages
             "manage_pins": True, # Whether the bot should manage pinned messages in the monitored channels (Remove old pins etc)
             "reupload_images": False,
             "pin_history": [], # List of ID's for all pinned messages that have been archived
@@ -229,6 +229,19 @@ class PinHistory(commands.Cog):
         """
         return os.path.splitext(filename)[1].lower() in [".png", ".jpg", ".jpeg", ".gif"]
 
+    async def manage_pins(self, channel):
+        """
+        Clears away excess pins in the pinned message tab
+        """
+        reversed_pins = reversed(await channel.pins()
+        reversed_pins_len = len(reversed_pins)
+        pin_limit = await self.config.guild(channel.guild).pin_limit()
+
+        if reversed_pins_len >= pin_limit:
+            for pin in reversed_pins[:reversed_pins_len-pin_limit]:
+                await channel.send("Removing {}".format(pin.jump_url))
+            # await
+
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update
     # Monitored Events
     @commands.Cog.listener('on_guild_channel_pins_update') # Executes the below command when a channels pinned messages changes
@@ -238,3 +251,4 @@ class PinHistory(commands.Cog):
             # Check if this pin hasn't already been archived
             last_pinned_message = (await channel.pins())[0]
             await self.archive_pin(channel, last_pinned_message)
+            await self.manage_pins(channel)

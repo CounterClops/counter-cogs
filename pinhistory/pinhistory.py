@@ -131,9 +131,11 @@ class PinHistory(commands.Cog):
         Restore pins from pin_history
         """
         # https://discordpy.readthedocs.io/en/latest/api.html#discord.MessageType
+        pin_history = await self.config.guild(channel.guild).pin_history()
         id = 795873307856601088
         message = await ctx.channel.fetch_message(id)
-        value = message.type == discord.MessageType.pins_add
+        value = message.type == discord.MessageType.pins_add # It worked, returns true if the message is pin add
+        value = (await ctx.channel.fetch_message(pin_history[0])).jump_url
         await ctx.send("Message is {}".format(value))
 
 

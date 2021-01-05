@@ -227,7 +227,7 @@ class PinHistory(commands.Cog):
         """
         Returns True if filename is image
         """
-        return os.path.splitext(filename)[1].lower() in [".png", ".jpg", ".jpeg", ".gif"]:
+        return os.path.splitext(filename)[1].lower() in [".png", ".jpg", ".jpeg", ".gif"]
 
     # https://discordpy.readthedocs.io/en/latest/api.html#discord.on_guild_channel_pins_update
     # Monitored Events
